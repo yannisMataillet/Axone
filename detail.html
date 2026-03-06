@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Axone — Détail</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; color: #222; }
+    header { background: #111; color: white; padding: 24px 40px; display: flex; align-items: center; gap: 24px; }
+    header h1 { font-size: 24px; font-weight: 300; letter-spacing: 4px; }
+    header a { color: #888; font-size: 13px; text-decoration: none; }
+    header a:hover { color: white; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 40px; }
+    .layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; }
+    .image-zone img { width: 100%; border: 1px solid #ddd; background: white; cursor: zoom-in; }
+    .image-zone.zoomed img { cursor: zoom-out; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; object-fit: contain; background: rgba(0,0,0,0.9); z-index: 100; padding: 20px; }
+    .info { background: white; border: 1px solid #e0e0e0; border-radius: 4px; padding: 24px; height: fit-content; }
+    .info h2 { font-size: 16px; font-weight: 500; margin-bottom: 16px; line-height: 1.4; }
+    .section { margin-bottom: 20px; }
+    .section-titre { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #999; margin-bottom: 8px; }
+    .noeud { font-size: 13px; color: #444; line-height: 1.6; }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { background: #f0f0f0; padding: 4px 10px; border-radius: 12px; font-size: 11px; color: #555; }
+    .materiaux { font-size: 12px; color: #444; line-height: 1.8; }
+    .meta-ligne { font-size: 12px; color: #666; margin-bottom: 6px; }
+    .meta-label { color: #999; margin-right: 6px; }
+    .dtu { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dtu-tag { background: #e8f0fe; padding: 4px 10px; border-radius: 12px; font-size: 11px; color: #3d5af1; cursor: default; }
+    .loading { text-align: center; padding: 80px; color: #999; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AXONE</h1>
+  <a href="index.html">← Retour à la recherche</a>
+</header>
+
+<div class="container">
+  <div id="loading" class="loading">Chargement...</div>
+  <div id="layout" class="layout" style="display:none">
+    <div class="image-zone" id="image-zone">
+      <img id="image-detail" src="" alt="détail constructif">
+    </div>
+    <div class="info">
+      <h2 id="nom"></h2>
+
+      <div class="section">
+        <div class="section-titre">Noeud constructif</div>
+        <div class="noeud" id="noeud"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Informations</div>
+        <div class="meta-ligne"><span class="meta-label">Échelle</span><span id="echelle"></span></div>
+        <div class="meta-ligne"><span class="meta-label">Source</span><span id="source"></span></div>
+        <div class="meta-ligne"><span class="meta-label">Catégorie</span><span id="categorie"></span></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Matériaux</div>
+        <div class="materiaux" id="materiaux"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">DTU applicables</div>
+        <div class="dtu" id="dtu"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Légende</div>
+        <div class="materiaux" id="legende"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Tags</div>
+        <div class="tags" id="tags"></div>
+      </div>
+
+      <div class="section">
+        <div class="section-titre">Notes</div>
+        <div class="noeud" id="notes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://nvdydrkepsfubkhionra.supabase.co"
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52ZHlkcmtlcHNmdWJraGlvbnJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjc1OTAsImV4cCI6MjA4NzkwMzU5MH0.8dzTrj6wlmgQLzqH8DzmgXcZOx1pYHovmfiheiRvyw8"
+
+const params = new URLSearchParams(window.location.search)
+const id = params.get("id")
+
+async function charger() {
+  const response = await fetch(SUPABASE_URL + "/rest/v1/Fiches?id=eq." + id, {
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY
+    }
+  })
+
+  const fiches = await response.json()
+  if (!fiches.length) return
+
+  const fiche = fiches[0]
+
+  document.title = "Axone — " + fiche.nom
+  document.getElementById("nom").textContent = fiche.nom
+  document.getElementById("noeud").textContent = fiche.noeud
+  document.getElementById("echelle").textContent = fiche.echelle_estimee || "—"
+  document.getElementById("source").textContent = fiche.source_pdf || "—"
+  document.getElementById("categorie").textContent = fiche.categorie || "—"
+  document.getElementById("notes").textContent = fiche.notes_analyse || "—"
+
+  const legende = JSON.parse(fiche.legende || "{}")
+  const legendeHTML = Object.entries(legende).map(([num, desc]) => num + ". " + desc).join("<br>")
+  document.getElementById("legende").innerHTML = legendeHTML || "—"
+
+  document.getElementById("image-detail").src = SUPABASE_URL + "/storage/v1/object/public/Images/" + fiche.image
+
+  const materiaux = JSON.parse(fiche.materiaux || "[]")
+  document.getElementById("materiaux").innerHTML = materiaux.map(m => "— " + m).join("<br>")
+
+  const tags = JSON.parse(fiche.tags || "[]")
+  document.getElementById("tags").innerHTML = tags.map(t => '<span class="tag">' + t + '</span>').join("")
+
+  const dtu = JSON.parse(fiche.dtu_probables || "[]")
+  if (dtu.length) {
+    document.getElementById("dtu").innerHTML = dtu.map(d => '<span class="dtu-tag" data-dtu="' + d + '">' + d + '</span>').join("")
+    document.querySelectorAll(".dtu-tag").forEach(tag => {
+      tag.addEventListener("mouseenter", async function() {
+        const code = this.getAttribute("data-dtu")
+        const res = await fetch(SUPABASE_URL + "/rest/v1/normes?dtu_equivalent=ilike.*" + encodeURIComponent(code) + "*&select=principe_cle,description", {
+          headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
+        })
+        const data = await res.json()
+        if (data.length && data[0].principe_cle) {
+          let tooltip = document.getElementById("dtu-tooltip")
+          if (!tooltip) {
+            tooltip = document.createElement("div")
+            tooltip.id = "dtu-tooltip"
+            tooltip.style = "position:fixed; background:#111; color:white; padding:12px 16px; border-radius:4px; font-size:12px; max-width:320px; line-height:1.5; z-index:1000; pointer-events:none;"
+            document.body.appendChild(tooltip)
+          }
+          tooltip.textContent = data[0].principe_cle
+          tooltip.style.display = "block"
+        }
+      })
+      tag.addEventListener("mousemove", function(e) {
+        const tooltip = document.getElementById("dtu-tooltip")
+        if (tooltip) {
+          tooltip.style.left = (e.clientX + 12) + "px"
+          tooltip.style.top = (e.clientY + 12) + "px"
+        }
+      })
+      tag.addEventListener("mouseleave", function() {
+        const tooltip = document.getElementById("dtu-tooltip")
+        if (tooltip) tooltip.style.display = "none"
+      })
+    })
+  } else {
+    document.getElementById("dtu").textContent = "—"
+  }
+
+  document.getElementById("loading").style.display = "none"
+  document.getElementById("layout").style.display = "grid"
+  document.getElementById("image-zone").addEventListener("click", function() {
+    this.classList.toggle("zoomed")
+  })
+}
+
+if (id) {
+  charger()
+} else {
+  document.getElementById("loading").textContent = "Aucune fiche selectionnee."
+}
+</script>
+
+</body>
+</html>
