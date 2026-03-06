@@ -62,7 +62,7 @@
 <script>
 const SUPABASE_URL = "https://nvdydrkepsfubkhionra.supabase.co"
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52ZHlkcmtlcHNmdWJraGlvbnJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjc1OTAsImV4cCI6MjA4NzkwMzU5MH0.8dzTrj6wlmgQLzqH8DzmgXcZOx1pYHovmfiheiRvyw8"
-const OPENAI_KEY = "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"
+const OPENAI_KEY = ""
 
 let filtreActif = ""
 let dernierResultats = []
@@ -120,13 +120,10 @@ function afficherResultats(fiches) {
 }
 
 async function getEmbedding(texte) {
-  const response = await fetch("https://api.openai.com/v1/embeddings", {
+  const response = await fetch("/api/embed", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + OPENAI_KEY
-    },
-    body: JSON.stringify({ model: "text-embedding-3-small", input: texte })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: texte })
   })
   const data = await response.json()
   return data.data[0].embedding
