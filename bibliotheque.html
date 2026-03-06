@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Axone — Bibliothèque</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f5f5f5; color: #222; }
+    header { background: #111; color: white; padding: 24px 40px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 24px; font-weight: 300; letter-spacing: 4px; }
+    header a { color: #888; font-size: 13px; text-decoration: none; }
+    header a:hover { color: white; }
+    .toolbar { padding: 24px 40px 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .toolbar input { padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; width: 260px; outline: none; }
+    .toolbar input:focus { border-color: #111; }
+    .filtres { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filtre { padding: 6px 14px; border: 1px solid #ddd; border-radius: 20px; font-size: 12px; cursor: pointer; background: white; color: #555; }
+    .filtre:hover { border-color: #111; color: #111; }
+    .filtre.actif { background: #111; color: white; border-color: #111; }
+    .nb { font-size: 12px; color: #999; padding: 0 40px 16px; }
+    .grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; padding: 0 40px 40px; }
+    .carte { background: white; border: 1px solid #e0e0e0; border-radius: 4px; overflow: hidden; cursor: pointer; transition: border-color 0.15s; }
+    .carte:hover { border-color: #999; }
+    .carte img { width: 100%; height: 180px; object-fit: cover; background: #f0f0f0; display: block; }
+    .carte-info { padding: 12px; }
+    .carte-nom { font-size: 13px; font-weight: 500; margin-bottom: 6px; line-height: 1.3; }
+    .carte-noeud { font-size: 11px; color: #777; line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .carte-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+    .badge { background: #f0f0f0; padding: 2px 8px; border-radius: 10px; font-size: 10px; color: #666; }
+    .loading { text-align: center; padding: 80px; color: #999; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>AXONE</h1>
+  <a href="index.html">← Recherche</a>
+</header>
+
+<div class="toolbar">
+  <input type="text" id="filtre-texte" placeholder="Filtrer par nom, matériau, nœud..." oninput="filtrer()">
+  <div class="filtres">
+    <span class="filtre actif" onclick="setFiltre(this, '')">Tous</span>
+    <span class="filtre" onclick="setFiltre(this, 'bois')">Bois</span>
+    <span class="filtre" onclick="setFiltre(this, 'acier')">Acier</span>
+    <span class="filtre" onclick="setFiltre(this, 'beton')">Béton</span>
+    <span class="filtre" onclick="setFiltre(this, 'verre')">Verre</span>
+    <span class="filtre" onclick="setFiltre(this, 'facade')">Façade</span>
+    <span class="filtre" onclick="setFiltre(this, 'toiture')">Toiture</span>
+    <span class="filtre" onclick="setFiltre(this, 'escalier')">Escalier</span>
+  </div>
+</div>
+
+<div class="nb" id="nb"></div>
+<div id="loading" class="loading">Chargement...</div>
+<div class="grille" id="grille"></div>
+
+<script>
+const SUPABASE_URL = "https://nvdydrkepsfubkhionra.supabase.co"
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52ZHlkcmtlcHNmdWJraGlvbnJhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMjc1OTAsImV4cCI6MjA4NzkwMzU5MH0.8dzTrj6wlmgQLzqH8DzmgXcZOx1pYHovmfiheiRvyw8"
+
+let toutesLesFiches = []
+let filtreActif = ""
+let pageCourante = 0
+const PAR_PAGE = 50
+
+async function charger() {
+  let toutes = []
+  let from = 0
+  const batch = 200
+
+  while (true) {
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/Fiches?select=id,nom,noeud,image,systeme_constructif,echelle_estimee,architecte,nom_projet&order=id.asc&limit=" + batch + "&offset=" + from,
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        }
+      }
+    )
+    const data = await response.json()
+    if (!data.length) break
+    toutes = toutes.concat(data)
+    from += batch
+    if (data.length < batch) break
+  }
+
+  toutesLesFiches = toutes
+  document.getElementById("loading").style.display = "none"
+  filtrer()
+}
+
+function setFiltre(el, valeur) {
+  document.querySelectorAll(".filtre").forEach(f => f.classList.remove("actif"))
+  el.classList.add("actif")
+  filtreActif = valeur
+  filtrer()
+}
+
+function filtrer() {
+  const texte = document.getElementById("filtre-texte").value.toLowerCase()
+
+  const filtrees = toutesLesFiches.filter(fiche => {
+    const champs = (fiche.nom + " " + fiche.noeud + " " + (fiche.systeme_constructif || "") + " " + (fiche.architecte || "") + " " + (fiche.nom_projet || "")).toLowerCase()
+    const matchTexte = !texte || champs.includes(texte)
+    const matchFiltre = !filtreActif || champs.includes(filtreActif)
+    return matchTexte && matchFiltre
+  })
+
+  document.getElementById("nb").textContent = filtrees.length + " détails"
+pageCourante = 0
+  afficher(filtrees)
+}
+
+function afficher(fiches) {
+  const grille = document.getElementById("grille")
+  const debut = pageCourante * PAR_PAGE
+  const fin = debut + PAR_PAGE
+  const page = fiches.slice(debut, fin)
+
+  if (pageCourante === 0) grille.innerHTML = ""
+
+  page.forEach(fiche => {
+    const img_url = SUPABASE_URL + "/storage/v1/object/public/Images/" + fiche.image
+    const systeme = fiche.systeme_constructif ? JSON.parse(fiche.systeme_constructif).slice(0, 2) : []
+    const echelle = fiche.echelle_estimee || ""
+
+    grille.innerHTML += `
+      <div class="carte" onclick="window.location='detail.html?id=${fiche.id}'">
+        <img src="${img_url}" onerror="this.style.display='none'">
+        <div class="carte-info">
+          <div class="carte-nom">${fiche.nom}</div>
+          <div class="carte-noeud">${fiche.noeud || ""}</div>
+          <div class="carte-meta">
+            ${echelle ? '<span class="badge">' + echelle + '</span>' : ""}
+            ${systeme.map(s => '<span class="badge">' + s + '</span>').join("")}
+          </div>
+        </div>
+      </div>
+    `
+  })
+
+  const btnExistant = document.getElementById("btn-plus")
+  if (btnExistant) btnExistant.remove()
+
+  if (fin < fiches.length) {
+    const btn = document.createElement("div")
+    btn.id = "btn-plus"
+    btn.style = "grid-column: 1/-1; text-align: center; padding: 24px;"
+    btn.innerHTML = '<button onclick="chargerPlus()" style="padding: 12px 32px; background: #111; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;">Charger plus (' + (fiches.length - fin) + ' restants)</button>'
+    grille.appendChild(btn)
+  }
+
+  window._fichesFiltered = fiches
+}
+
+function chargerPlus() {
+  pageCourante++
+  afficher(window._fichesFiltered)
+}
+
+charger()
+</script>
+
+</body>
+</html>
