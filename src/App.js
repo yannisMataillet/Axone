@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback } from "react";
 // ─── Bibliothèque de détails constructifs ────────────────────────────────────
 const DETAILS_LIBRARY = [
   // ─── Fabricants (Weber, Knauf, Soprema) ─────────────────────────────────
-{
+  {
     id: "knauf-1",
     title: "Jonction plancher bas / cloison",
     fabricant: "Knauf",
@@ -80,10 +80,10 @@ const DETAILS_LIBRARY = [
     source: "Soprema Guide Conception Toitures-Terrasses",
     materiaux: ["Bonde à collier Ø 125", "Sopralène Flam 180", "Soprasolin 40", "Grille anti-feuilles inox"],
     points_cles: ["Pontage de la bonde sur 20cm minimum", "Pente minimum 1% vers bonde", "Trop-plein de sécurité obligatoire Standards 43.1"],
-  },,
+  }, ,
 
   // ─── Detail Magazine (289 entrees, 78 projets) ───────────────────────────
-{
+  {
     "id": "detail-2001-tokyo-01",
     "title": "Structure poteau aluminium avec noyau cruciforme stabilisateur",
     "fabricant": "Detail Magazine",
@@ -10643,14 +10643,14 @@ Si l'architecte demande un schéma ou dessin de principe (dessine, schéma, prin
 Si l'architecte pose une question, réponds-y dans 'recommandation'. Cite des projets réels. Pas de DTU, pas de fabricants.
 Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks ni commentaires.`
     : isMidStage
-    ? `Tu es un expert en construction. Tu analyses des plans à l'échelle intermédiaire (1/100, 1/50).
+      ? `Tu es un expert en construction. Tu analyses des plans à l'échelle intermédiaire (1/100, 1/50).
 Si l'image n'est pas un dessin ou document architectural, réponds UNIQUEMENT avec ce JSON : {"not_architecture": true, "message": "une réponse courte et drôle"}.
 Si l'architecte demande un schéma de principe (dessine, schéma, principe, draw, diagram), ajoute "request_diagram": true et "diagram_description" (couches, ordre, contraintes — sans marque).
 L'architecte définit ses systèmes constructifs et ses interfaces critiques.
 Cite quelques règles clés adaptées : pont thermique RE2020 (Bbio), continuité de l'isolation, règles de relevé (DTU 20.12, DTU 43), calfeutrement des menuiseries, ventilation des lames d'air (DTU 31.2).
 Références de projets similaires bienvenues à ce stade.
 Réponds UNIQUEMENT en JSON valide, sans markdown ni backticks ni commentaires.`
-    : `Tu es un expert en détails constructifs et en réglementation française.
+      : `Tu es un expert en détails constructifs et en réglementation française.
 Tu analyses des dessins de détail (1/20, 1/10) pour identifier les interfaces critiques.
 Si l'image n'est pas un dessin ou document architectural, réponds UNIQUEMENT avec ce JSON : {"not_architecture": true, "message": "une réponse courte et drôle qui reconnaît ce que c'est vraiment"}.
 L'architecte a posé une question spécifique — réponds directement à sa question en priorité.
@@ -10680,7 +10680,7 @@ Réponds avec ce JSON exact et uniquement ce JSON :
   "anecdote": "Une anecdote vraie et courte (2-3 phrases max) sur un bâtiment ou un architecte en lien avec le système ou la question. Surprenante, concrète."
 }`
     : isMidStage
-    ? `Analyse cette esquisse architecturale à l'échelle intermédiaire${contextText ? ` avec ce contexte : "${contextText}"` : ""}.
+      ? `Analyse cette esquisse architecturale à l'échelle intermédiaire${contextText ? ` avec ce contexte : "${contextText}"` : ""}.
 
 Identifie les interfaces constructives critiques (toiture/façade, plancher/façade, soubassement, menuiseries).
 Pour chaque interface, indique sa position approximative dans l'image.
@@ -10706,7 +10706,7 @@ Réponds avec ce JSON exact et uniquement ce JSON :
   "anecdote": "Une anecdote vraie et courte (2-3 phrases max) sur un bâtiment, un architecte ou un chantier en lien avec la question ou le système. Surprenante, concrète.",
   "reponse_technique": "Réponse directe et précise à la question — règles, DTU applicables, points d'attention. 3-5 phrases."
 }`
-    : `Analyse cette esquisse architecturale${contextText ? ` avec ce contexte : "${contextText}"` : ""}.
+      : `Analyse cette esquisse architecturale${contextText ? ` avec ce contexte : "${contextText}"` : ""}.
 
 Identifie les nœuds constructifs visibles ou implicites (jonctions mur/plancher, menuiseries, toiture, façade, soubassement, étanchéité, etc.).
 Pour chaque nœud, indique sa position approximative dans l'image.
@@ -10982,26 +10982,26 @@ function FormRex({ detailId, onSave, onCancel }) {
         Share feedback
       </p>
       <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-        <input value={form.projet} onChange={e => setForm({...form, projet: e.target.value})}
+        <input value={form.projet} onChange={e => setForm({ ...form, projet: e.target.value })}
           placeholder="Project — e.g. Riverside Apartments 2023"
-          style={inputS} onFocus={e => e.target.style.borderColor="#dc2626"} onBlur={e => e.target.style.borderColor="#292524"} />
-        <select value={form.categorie_rex} onChange={e => setForm({...form, categorie_rex: e.target.value})}
+          style={inputS} onFocus={e => e.target.style.borderColor = "#dc2626"} onBlur={e => e.target.style.borderColor = "#292524"} />
+        <select value={form.categorie_rex} onChange={e => setForm({ ...form, categorie_rex: e.target.value })}
           style={{ ...inputS, color: form.categorie_rex ? "#e7e5e4" : "#57534e" }}>
           <option value="">REX type</option>
           {categories.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
-        <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})}
+        <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
           placeholder="Problem description — what happened concretely..."
           style={{ ...inputS, minHeight: "60px", lineHeight: 1.7, resize: "vertical" }}
-          onFocus={e => e.target.style.borderColor="#dc2626"} onBlur={e => e.target.style.borderColor="#292524"} />
+          onFocus={e => e.target.style.borderColor = "#dc2626"} onBlur={e => e.target.style.borderColor = "#292524"} />
         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-          <select value={form.severite} onChange={e => setForm({...form, severite: e.target.value})}
+          <select value={form.severite} onChange={e => setForm({ ...form, severite: e.target.value })}
             style={{ ...inputS, width: "auto", flex: 1 }}>
             <option value="mineur">Minor — slight issue</option>
             <option value="majeur">Major — rework required</option>
             <option value="critique">Critical — incident / liability</option>
           </select>
-          <button onClick={() => { if (form.projet && form.description) { saveRex(detailId, form); onSave(); }}}
+          <button onClick={() => { if (form.projet && form.description) { saveRex(detailId, form); onSave(); } }}
             style={{ padding: "7px 16px", background: "#dc2626", color: "#fff", border: "none", borderRadius: "3px", fontSize: "10px", fontFamily: "inherit", cursor: "pointer" }}>
             Save
           </button>
@@ -11047,8 +11047,8 @@ function DetailCard({ detail, index, aiRelevance, earlyStage }) {
             color: alertLevel === "rouge" ? "#dc2626" : alertLevel === "orange" ? "#f97316" : "#f59e0b"
           }}>
             {alertLevel === "rouge" ? "⚠ Agency REX — this exact detail" :
-             alertLevel === "orange" ? "⚡ Community REX — this node type" :
-             "○ Agency REX — same construction family"}
+              alertLevel === "orange" ? "⚡ Community REX — this node type" :
+                "○ Agency REX — same construction family"}
           </span>
           <span style={{ fontSize: "9px", color: "#0c0a09" }}>— see Details</span>
         </div>
@@ -11082,37 +11082,37 @@ function DetailCard({ detail, index, aiRelevance, earlyStage }) {
           </div>
         </div>
       ) : (
-      <div style={{ display: "flex" }}>
-        <img src={detail.thumbnail} alt="" style={{ width: "110px", flexShrink: 0, objectFit: "cover", opacity: 0.85, background: "#f5f4f2" }} />
-        <div style={{ flex: 1, padding: "15px 18px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
-            <div>
-              <p style={{ fontFamily: "'Fraunces', serif", fontSize: "14px", fontWeight: 300, color: "#0c0a09", marginBottom: "2px" }}>{detail.title}</p>
-              <p style={{ fontSize: "10px", color: "#78716c" }}>{detail.systeme}</p>
+        <div style={{ display: "flex" }}>
+          <img src={detail.thumbnail} alt="" style={{ width: "110px", flexShrink: 0, objectFit: "cover", opacity: 0.85, background: "#f5f4f2" }} />
+          <div style={{ flex: 1, padding: "15px 18px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+              <div>
+                <p style={{ fontFamily: "'Fraunces', serif", fontSize: "14px", fontWeight: 300, color: "#0c0a09", marginBottom: "2px" }}>{detail.title}</p>
+                <p style={{ fontSize: "10px", color: "#78716c" }}>{detail.systeme}</p>
+              </div>
+              <Badge>{detail.fabricant}</Badge>
             </div>
-            <Badge>{detail.fabricant}</Badge>
-          </div>
-          <p style={{ fontSize: "11px", color: "#44403c", lineHeight: 1.75, marginBottom: "10px" }}>{detail.description}</p>
-          {aiRelevance && (
-            <p style={{ fontSize: "10px", color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "3px", padding: "4px 10px", marginBottom: "10px", lineHeight: 1.6 }}>
-              ↗ {aiRelevance}
-            </p>
-          )}
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <button onClick={() => setExpanded(!expanded)}
-              style={{ fontSize: "10px", color: "#0c0a09", background: "none", border: "1px solid #d6d3cf", borderRadius: "3px", padding: "4px 12px", cursor: "pointer", fontFamily: "inherit" }}
-              onMouseOver={e => { e.target.style.color="#e7e5e4"; e.target.style.borderColor="#57534e"; }}
-              onMouseOut={e => { e.target.style.color="#57534e"; e.target.style.borderColor="#292524"; }}>
-              {expanded ? "↑ Collapse" : "↓ Details"}
-            </button>
-            <a href={`mailto:hello@xdetail.com?subject=Feedback on: ${detail.title}&body=Detail: ${detail.title}%0A%0AYour feedback:%0A`}
-              style={{ fontSize: "10px", color: "#a8a29e", textDecoration: "none", borderBottom: "1px dashed #d6d3cf", paddingBottom: "1px" }}>
-              Share thoughts
-            </a>
-            <span style={{ fontSize: "10px", color: "#0c0a09" }}>{detail.source}</span>
+            <p style={{ fontSize: "11px", color: "#44403c", lineHeight: 1.75, marginBottom: "10px" }}>{detail.description}</p>
+            {aiRelevance && (
+              <p style={{ fontSize: "10px", color: "#b45309", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: "3px", padding: "4px 10px", marginBottom: "10px", lineHeight: 1.6 }}>
+                ↗ {aiRelevance}
+              </p>
+            )}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <button onClick={() => setExpanded(!expanded)}
+                style={{ fontSize: "10px", color: "#0c0a09", background: "none", border: "1px solid #d6d3cf", borderRadius: "3px", padding: "4px 12px", cursor: "pointer", fontFamily: "inherit" }}
+                onMouseOver={e => { e.target.style.color = "#e7e5e4"; e.target.style.borderColor = "#57534e"; }}
+                onMouseOut={e => { e.target.style.color = "#57534e"; e.target.style.borderColor = "#292524"; }}>
+                {expanded ? "↑ Collapse" : "↓ Details"}
+              </button>
+              <a href={`mailto:hello@xdetail.com?subject=Feedback on: ${detail.title}&body=Detail: ${detail.title}%0A%0AYour feedback:%0A`}
+                style={{ fontSize: "10px", color: "#a8a29e", textDecoration: "none", borderBottom: "1px dashed #d6d3cf", paddingBottom: "1px" }}>
+                Share thoughts
+              </a>
+              <span style={{ fontSize: "10px", color: "#0c0a09" }}>{detail.source}</span>
+            </div>
           </div>
         </div>
-      </div>
       )}
 
       {/* Détails matériaux + points clés */}
@@ -11294,8 +11294,8 @@ function QuestionsBlock({ questions, echelle }) {
   const label = isEarly
     ? "Questions to open the field"
     : isMid
-    ? "Questions to guide precision"
-    : "Questions to check before detailing";
+      ? "Questions to guide precision"
+      : "Questions to check before detailing";
 
   const accent = isEarly ? "#6ee7b7" : isMid ? "#93c5fd" : "#f59e0b";
 
@@ -11426,15 +11426,15 @@ function NoeudZoom({ imageUrl, noeuds, onSelectNoeud, activeNoeud, results }) {
 
   // Position des pastilles sur l'image (en %)
   const positionMap = {
-    "haut-gauche":   { left: "20%", top: "20%" },
-    "haut-centre":   { left: "50%", top: "15%" },
-    "haut-droite":   { left: "80%", top: "20%" },
+    "haut-gauche": { left: "20%", top: "20%" },
+    "haut-centre": { left: "50%", top: "15%" },
+    "haut-droite": { left: "80%", top: "20%" },
     "centre-gauche": { left: "15%", top: "50%" },
-    "centre":        { left: "50%", top: "50%" },
+    "centre": { left: "50%", top: "50%" },
     "centre-droite": { left: "85%", top: "50%" },
-    "bas-gauche":    { left: "20%", top: "80%" },
-    "bas-centre":    { left: "50%", top: "85%" },
-    "bas-droite":    { left: "80%", top: "80%" },
+    "bas-gauche": { left: "20%", top: "80%" },
+    "bas-centre": { left: "50%", top: "85%" },
+    "bas-droite": { left: "80%", top: "80%" },
   };
 
   // Matching élargi — catégorie + tags + mots-clés du label
@@ -11911,18 +11911,18 @@ export default function App() {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <button onClick={() => setShowQR(true)}
             style={{ fontSize: "10px", color: "#0c0a09", background: "none", border: "1px solid #e5e2de", borderRadius: "3px", padding: "6px 14px", cursor: "pointer", fontFamily: "inherit", display: "flex", alignItems: "center", gap: "6px" }}
-            onMouseOver={e => e.currentTarget.style.borderColor="#44403c"}
-            onMouseOut={e => e.currentTarget.style.borderColor="#1c1917"}>
+            onMouseOver={e => e.currentTarget.style.borderColor = "#44403c"}
+            onMouseOut={e => e.currentTarget.style.borderColor = "#1c1917"}>
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-              <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/>
+              <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" />
             </svg>
             Share
           </button>
           {stage !== "upload" && (
             <button onClick={reset} style={{ fontSize: "10px", color: "#0c0a09", background: "none", border: "1px solid #e5e2de", borderRadius: "3px", padding: "6px 14px", cursor: "pointer", fontFamily: "inherit" }}
-              onMouseOver={e => e.currentTarget.style.borderColor="#44403c"}
-              onMouseOut={e => e.currentTarget.style.borderColor="#1c1917"}>
+              onMouseOver={e => e.currentTarget.style.borderColor = "#44403c"}
+              onMouseOut={e => e.currentTarget.style.borderColor = "#1c1917"}>
               ← New analysis
             </button>
           )}
@@ -12017,7 +12017,7 @@ export default function App() {
                     borderColor: userQuestion ? "#f59e0b" : "#d6d3cf",
                     marginBottom: "16px", width: "100%", boxSizing: "border-box",
                   }}
-                  onFocus={e => e.target.style.borderColor="#f59e0b"}
+                  onFocus={e => e.target.style.borderColor = "#f59e0b"}
                   onBlur={e => e.target.style.borderColor = userQuestion ? "#f59e0b" : "#d6d3cf"}
                   autoFocus
                 />
@@ -12072,8 +12072,8 @@ export default function App() {
                 )}
                 <button onClick={userQuestion.trim() ? runAnalysis : undefined}
                   style={{ width: "100%", padding: "14px", background: userQuestion.trim() ? "#0c0a09" : "#e5e2de", color: userQuestion.trim() ? "#ffffff" : "#a8a29e", border: "none", borderRadius: "4px", fontSize: "13px", cursor: userQuestion.trim() ? "pointer" : "default", fontFamily: "inherit", letterSpacing: "0.05em", transition: "all 0.2s" }}
-                  onMouseEnter={e => { if (userQuestion.trim()) e.currentTarget.style.background="#292524"; }}
-                  onMouseLeave={e => { if (userQuestion.trim()) e.currentTarget.style.background="#0c0a09"; }}>
+                  onMouseEnter={e => { if (userQuestion.trim()) e.currentTarget.style.background = "#292524"; }}
+                  onMouseLeave={e => { if (userQuestion.trim()) e.currentTarget.style.background = "#0c0a09"; }}>
                   Ask xdetail →
                 </button>
               </div>
@@ -12081,7 +12081,7 @@ export default function App() {
           </div>
         )}
 
-        
+
         {stage === "analyzing" && (
           <div className="fade-in" style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "80px 0", gap: "48px" }}>
             <div style={{ textAlign: "center" }}>
@@ -12110,8 +12110,8 @@ export default function App() {
             </p>
             <button onClick={reset}
               style={{ fontSize: "11px", color: "#57534e", background: "none", border: "1px solid #d6d3cf", borderRadius: "3px", padding: "10px 24px", cursor: "pointer", fontFamily: "inherit" }}
-              onMouseEnter={e => e.currentTarget.style.borderColor="#a8a29e"}
-              onMouseLeave={e => e.currentTarget.style.borderColor="#d6d3cf"}>
+              onMouseEnter={e => e.currentTarget.style.borderColor = "#a8a29e"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "#d6d3cf"}>
               ← Try with a drawing
             </button>
           </div>
@@ -12127,9 +12127,9 @@ export default function App() {
                 <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "30px", fontWeight: 300, lineHeight: 1.25, marginBottom: "12px" }}>
                   {aiAnalysis?.userQuestion_echo
                     ? `"${aiAnalysis.userQuestion_echo}"`
-                    : (currentEchelle.includes("1/500") || currentEchelle.includes("1/200") 
-                       ? "Inspirations & references" 
-                       : "Construction references")}
+                    : (currentEchelle.includes("1/500") || currentEchelle.includes("1/200")
+                      ? "Inspirations & references"
+                      : "Construction references")}
                 </h2>
                 {aiAnalysis?.recommandation && !aiAnalysis?.reponse_technique && (
                   <p style={{ fontSize: "12px", color: "#57534e", lineHeight: 1.75, maxWidth: "480px" }}>{aiAnalysis.recommandation}</p>
@@ -12147,7 +12147,7 @@ export default function App() {
             {aiAnalysis && (
               <div style={{ background: "#fafaf9", border: "1px solid #e5e2de", borderRadius: "4px", padding: "24px", marginBottom: "32px" }}>
                 <p style={{ fontSize: "9px", color: "#0c0a09", letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "14px" }}>xdetail Analysis</p>
-                
+
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px", marginBottom: "24px" }}>
                   <div>
                     {aiAnalysis.type_document && (<><p style={{ fontSize: "9px", color: "#0c0a09", marginBottom: "5px" }}>Document</p><p style={{ fontSize: "11px", color: "#0c0a09", marginBottom: "12px" }}>{aiAnalysis.type_document}</p></>)}
@@ -12157,16 +12157,16 @@ export default function App() {
                 </div>
 
                 {/* Nœuds cliquables avec zoom image — mode Find */}
-                {mode === "trouver" && imageUrl && aiAnalysis.noeuds_identifies?.length > 0 && 
+                {mode === "trouver" && imageUrl && aiAnalysis.noeuds_identifies?.length > 0 &&
                   aiAnalysis.noeuds_identifies.some(n => typeof n === "object" && n.position) && (
-                  <NoeudZoom 
-                    imageUrl={imageUrl} 
-                    noeuds={aiAnalysis.noeuds_identifies.filter(n => typeof n === "object")}
-                    onSelectNoeud={(noeud) => setActiveNoeud(noeud)}
-                    activeNoeud={activeNoeud}
-                    results={results}
-                  />
-                )}
+                    <NoeudZoom
+                      imageUrl={imageUrl}
+                      noeuds={aiAnalysis.noeuds_identifies.filter(n => typeof n === "object")}
+                      onSelectNoeud={(noeud) => setActiveNoeud(noeud)}
+                      activeNoeud={activeNoeud}
+                      results={results}
+                    />
+                  )}
 
                 {/* Bloc variantes — mode Solve uniquement */}
                 {mode === "resoudre" && aiAnalysis.variantes?.length > 0 && (
@@ -12199,7 +12199,7 @@ export default function App() {
                   try {
                     const response = await fetch("https://api.anthropic.com/v1/messages", {
                       method: "POST",
-                      headers: { "Content-Type": "application/json", "anthropic-version": "2023-06-01", "x-api-key": API_KEY },
+                      headers: { "Content-Type": "application/json", "anthropic-version": "2023-06-01", "x-api-key": process.env.REACT_APP_ANTHROPIC_API_KEY },
                       body: JSON.stringify({
                         model: "claude-opus-4-5",
                         max_tokens: 2000,
@@ -12214,7 +12214,7 @@ Réponds UNIQUEMENT avec le code SVG complet (viewBox="0 0 400 300"), sans markd
                     const data = await response.json();
                     const svg = data.content?.[0]?.text || "";
                     setDiagram(svg);
-                  } catch(e) { console.error(e); }
+                  } catch (e) { console.error(e); }
                   setGeneratingDiagram(false);
                 }}
               />
@@ -12278,16 +12278,16 @@ Réponds UNIQUEMENT avec le code SVG complet (viewBox="0 0 400 300"), sans markd
           <span style={{ fontSize: "9px", color: "#a8a29e" }}>Built by Yannis —</span>
           <a href="mailto:hello@xdetail.com"
             style={{ fontSize: "9px", color: "#78716c", textDecoration: "none" }}
-            onMouseEnter={e => e.target.style.color="#0c0a09"}
-            onMouseLeave={e => e.target.style.color="#78716c"}>
+            onMouseEnter={e => e.target.style.color = "#0c0a09"}
+            onMouseLeave={e => e.target.style.color = "#78716c"}>
             hello@xdetail.com
           </a>
           <a href="https://www.linkedin.com/in/yannismataillet/" target="_blank" rel="noopener noreferrer"
             style={{ fontSize: "9px", color: "#78716c", textDecoration: "none", display: "flex", alignItems: "center", gap: "4px" }}
-            onMouseEnter={e => e.currentTarget.style.color="#0c0a09"}
-            onMouseLeave={e => e.currentTarget.style.color="#78716c"}>
+            onMouseEnter={e => e.currentTarget.style.color = "#0c0a09"}
+            onMouseLeave={e => e.currentTarget.style.color = "#78716c"}>
             <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
             LinkedIn
           </a>
